@@ -20,7 +20,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class PATHS_MOST_WALKED_API UCVImage : public UObject
 {
 	GENERATED_BODY()

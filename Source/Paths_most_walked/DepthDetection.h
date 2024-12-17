@@ -4,25 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "CVImage.h"
-#include "Calibration.generated.h"
 
+#include "Calibration.h"
+#include "DepthDetection.generated.h"
 
 /**
  * 
  */
 UCLASS(BlueprintType)
-class PATHS_MOST_WALKED_API UCalibration : public UBlueprintFunctionLibrary
+class PATHS_MOST_WALKED_API UDepthDetection : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 	public:
 		UFUNCTION(BlueprintCallable)
-			void storeImg(UTexture2D* imageL, UTexture2D* imageR);
+			void updateStereo();
 		UFUNCTION(BlueprintCallable)
-			void getStereoMatrixes();
-	public:
-		std::vector<cv::Mat> getMaps();
-
-
+			void retrieveMaps(UCalibration* calibrator);
+		UFUNCTION(BlueprintCallable)
+			bool mapsStatus();
 	
 };

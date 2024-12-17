@@ -22,8 +22,33 @@ cv::Mat lm2;
 cv::Mat rm1;
 cv::Mat rm2;
 
-void UCalibration::storeImg(UCVImage* imageL, UCVImage* imageR) {
-    frames.push_back(std::vector<cv::Mat>{imageL->image, imageR->image});
+void UCalibration::storeImg(UTexture2D* imageL, UTexture2D* imageR) {
+    
+    FTexture2DMipMap* MyMipMap = &imageL->GetPlatformData()->Mips[0];
+    FByteBulkData* RawImageData = &MyMipMap->BulkData;
+
+    uint8* Pixels = static_cast<uint8*>(RawImageData->Lock(LOCK_READ_ONLY));
+
+    int32 SizeX = imageL->GetSizeX();
+    int32 SizeY = imageL->GetSizeY();
+    cv::Vec3b* newColor = new cv::Vec3b();
+
+    cv::Mat* imageMat = new cv::Mat(SizeY, SizeX, CV_8UC4, Pixels);//CV_64FC3);
+    RawImageData->Unlock();
+
+    FTexture2DMipMap* MyMipMap2 = &imageR->GetPlatformData()->Mips[0];
+    FByteBulkData* RawImageData2 = &MyMipMap2->BulkData;
+
+    uint8* Pixels2 = static_cast<uint8*>(RawImageData2->Lock(LOCK_READ_ONLY));
+
+    int32 SizeX2 = imageR->GetSizeX();
+    int32 SizeY2 = imageR->GetSizeY();
+    cv::Vec3b* newColor2 = new cv::Vec3b();
+
+    cv::Mat* imageMa2t = new cv::Mat(SizeY2, SizeX2, CV_8UC4, Pixels2);//CV_64FC3);
+    RawImageData2->Unlock();
+    
+    frames.push_back(std::vector<cv::Mat>{*imageMat,*imageMa2t});
 }
 
 void UCalibration::getStereoMatrixes() {
@@ -146,5 +171,9 @@ void UCalibration::getStereoMatrixes() {
     lm2 = Left_Stereo_Map2;
     rm1 = Right_Stereo_Map1;
     rm2 = Right_Stereo_Map2;
+}
+
+std::vector<cv::Mat> UCalibration::getMaps() {
+    return std::vector<cv::Mat> {lm1,lm2,rm1,rm2};
 }
 
