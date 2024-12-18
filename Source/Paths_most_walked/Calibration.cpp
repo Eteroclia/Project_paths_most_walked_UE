@@ -47,7 +47,9 @@ void UCalibration::storeImg(UTexture2D* imageL, UTexture2D* imageR) {
 
     cv::Mat* imageMa2t = new cv::Mat(SizeY2, SizeX2, CV_8UC4, Pixels2);//CV_64FC3);
     RawImageData2->Unlock();
-    
+    cv::namedWindow("image");
+    cv::imshow("image", *imageMat);
+    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
     frames.push_back(std::vector<cv::Mat>{*imageMat,*imageMa2t});
 }
 
