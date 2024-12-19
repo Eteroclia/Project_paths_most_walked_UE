@@ -12,6 +12,7 @@
 #include "opencv2/imgcodecs.hpp"
 #include <iomanip>
 #include "CVImage.h"
+#include <stdexcept>
 
 
 std::vector<std::vector<cv::Mat>> frames;
@@ -23,8 +24,14 @@ cv::Mat rm1;
 cv::Mat rm2;
 
 void UCalibration::storeImg(UTexture2D* imageL, UTexture2D* imageR) {
+
+    if (imageL->GetSizeX() == 0) {
+        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Empty image!"));
+        return;
+    }
     
-    FTexture2DMipMap* MyMipMap = &imageL->GetPlatformData()->Mips[0];
+    
+    /*FTexture2DMipMap* MyMipMap = &imageL->GetPlatformData()->Mips[0];
     FByteBulkData* RawImageData = &MyMipMap->BulkData;
 
     uint8* Pixels = static_cast<uint8*>(RawImageData->Lock(LOCK_READ_ONLY));
@@ -48,9 +55,13 @@ void UCalibration::storeImg(UTexture2D* imageL, UTexture2D* imageR) {
     cv::Mat* imageMa2t = new cv::Mat(SizeY2, SizeX2, CV_8UC4, Pixels2);//CV_64FC3);
     RawImageData2->Unlock();
     cv::namedWindow("image");
-    cv::imshow("image", *imageMat);
+    cv::imshow("image", *imageMat);*/
+    
+    
+    
+    
     GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
-    frames.push_back(std::vector<cv::Mat>{*imageMat,*imageMa2t});
+    //frames.push_back(std::vector<cv::Mat>{*imageMat,*imageMa2t});
 }
 
 void UCalibration::getStereoMatrixes() {
